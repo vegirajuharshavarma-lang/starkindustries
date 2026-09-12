@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>STARK-AI CORE — Your Intelligence. Your Core.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-stark-dark">
+  <div id="app" class="stark-app-container">
+    
+    <!-- Top Mobile Navigation Bar -->
+    <header class="mobile-header">
+      <button id="btn-sidebar-toggle" class="icon-btn" aria-label="Toggle Navigation">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      <div class="mobile-brand">
+        <span class="reactor-dot"></span>
+        <span class="brand-text">STARK<span class="glow-text">-AI</span></span>
+      </div>
+      <div class="mobile-actions">
+        <button id="btn-mobile-join" class="icon-btn" onclick="showModal('modal-join-session')" title="Join Shared Session">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </button>
+        <button id="btn-mobile-plan" class="plan-badge-mini" onclick="showModal('modal-subscription')">PRO</button>
+        <button id="btn-mobile-new-chat" class="icon-btn" aria-label="New Conversation" onclick="createNewConversation()">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar">
+      <!-- Brand Header -->
+      <div class="sidebar-header">
+        <div class="brand-logo" onclick="switchView('view-dashboard')">
+          <div class="arc-core-mini">
+            <div class="arc-ring"></div>
+            <div class="arc-center"></div>
+          </div>
+          <div class="brand-meta">
+            <h1 class="brand-title">STARK-AI <span class="badge-core">CORE</span></h1>
+            <span class="brand-tagline">Your Intelligence. Your Core.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action: New Chat -->
+      <div class="sidebar-action-wrap">
+        <button id="btn-new-chat" class="btn-new-chat" onclick="createNewConversation()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>Initiate New Core</span>
+          <span class="shortcut-tag">Ctrl+N</span>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="view-chat" onclick="switchView('view-chat')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span>AI Neural Chat</span>
+        </button>
+        <button class="nav-item" data-view="view-dashboard" onclick="switchView('view-dashboard')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span>Core Dashboard</span>
+        </button>
+        <button class="nav-item" data-view="view-files" onclick="showModal('modal-files')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+          <span>Data & Files Vault</span>
+          <span id="badge-files-count" class="pill-count">0</span>
+        </button>
+        <button class="nav-item" data-view="view-subscription" onclick="showModal('modal-subscription')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          <span>Core Subscriptions</span>
+          <span id="badge-plan-tier" class="badge-tier">PRO</span>
+        </button>
+        <button class="nav-item" id="nav-item-collab" onclick="openCurrentCollabModal()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span>Team Collaboration</span>
+          <span id="badge-sidebar-collab" class="pill-count" style="background:rgba(0,229,255,0.15);color:var(--cyan-core);border:1px solid rgba(0,229,255,0.3);">LIVE</span>
+        </button>
+        <button class="nav-item" onclick="showModal('modal-join-session')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><polyline points="10 17 15 12 10 7"></polyline><line x1="15" y1="12" x2="3" y2="12"></line></svg>
+          <span>Join Shared Code</span>
+        </button>
+        <button id="nav-item-admin" class="nav-item admin-only" onclick="switchView('view-admin')">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>Admin Command</span>
+          <span class="badge-admin">SEC</span>
+        </button>
+      </nav>
+
+      <!-- Search Conversations -->
+      <div class="sidebar-search">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="chat-search" placeholder="Search transmissions..." oninput="filterConversations(this.value)">
+        </div>
+      </div>
+
+      <!-- Conversations History List -->
+      <div class="conversations-wrapper">
+        <div class="convo-group-title">Active Transmissions</div>
+        <div id="conversations-list" class="conversations-list">
+          <!-- Dynamic conversation items -->
+        </div>
+      </div>
+
+      <!-- System Quota / Telemetry Widget -->
+      <div class="sidebar-telemetry">
+        <div class="telemetry-header">
+          <span class="telemetry-title">Monthly Quota</span>
+          <span id="telemetry-usage-pct" class="telemetry-value">12%</span>
+        </div>
+        <div class="telemetry-bar">
+          <div id="telemetry-bar-fill" class="telemetry-bar-fill" style="width: 12%;"></div>
+        </div>
+        <div class="telemetry-meta">
+          <span id="telemetry-counts">18 / 150 Transmissions</span>
+          <a href="javascript:void(0)" onclick="showModal('modal-subscription')" class="telemetry-upgrade">Upgrade</a>
+        </div>
+      </div>
+
+      <!-- User Profile / Footer -->
+      <div class="sidebar-footer">
+        <div class="user-profile-widget" onclick="showModal('modal-profile')">
+          <div class="user-avatar" id="user-avatar-initials">TS</div>
+          <div class="user-info">
+            <span class="user-name" id="user-display-name">Tony Stark</span>
+            <span class="user-plan" id="user-display-plan">PRO ARCHITECT</span>
+          </div>
+          <button class="icon-btn-subtle" onclick="event.stopPropagation(); showModal('modal-settings')" title="Settings">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Container -->
+    <main class="main-content">
+
+      <!-- ================= VIEW 1: AI CHAT ================= -->
+      <section id="view-chat" class="view-panel active">
+        <!-- Chat Control Top Bar -->
+        <div class="chat-topbar">
+          <div class="chat-title-zone">
+            <h2 id="current-chat-title" class="chat-title">Neural Workspace</h2>
+            <div class="chat-meta-badges">
+              <span id="active-model-tag" class="badge-model">STARK 3.5 FLASH</span>
+              <span id="chat-tokens-tag" class="badge-tokens">142 tokens</span>
+              <span id="backend-status-tag" class="badge-status-online" title="Backend Core Linked">● ONLINE</span>
+            </div>
+          </div>
+          <div class="chat-top-actions">
+            <!-- Collaboration & Team Management Button -->
+            <button id="btn-collab-action" class="btn-topbar-collab" onclick="openCurrentCollabModal()" title="Live Real-time Collaboration">
+              <div class="collab-avatar-stack" id="topbar-avatar-stack">
+                <span class="stack-avatar" style="background:#00e5ff;color:#000;">TS</span>
+                <span class="stack-avatar" style="background:#10b981;color:#000;">BB</span>
+              </div>
+              <span class="collab-btn-text" id="topbar-collab-text">Collaborate</span>
+              <span class="badge-collab-count" id="topbar-collab-count">2</span>
+            </button>
+
+            <!-- Model Switcher Dropdown -->
+            <div class="model-picker-wrap">
+              <select id="model-select" class="model-select" onchange="onModelChange(this.value)">
+                <option value="gemini-3.5-flash">STARK Flash (Fast / Low Latency)</option>
+                <option value="gemini-3.1-pro-preview">STARK Pro Cortex (High Reasoning)</option>
+                <option value="gemini-2.5-flash-image">STARK Vision & Gen (Multimodal)</option>
+              </select>
+            </div>
+            <button class="btn-topbar-icon" onclick="clearCurrentChat()" title="Clear Conversation">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+            <button class="btn-topbar-icon" onclick="exportChatTranscript()" title="Export Transmission">
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Real-Time Collaboration Presence Bar -->
+        <div id="collab-presence-bar" class="collab-presence-bar">
+          <div class="presence-left">
+            <span class="presence-dot"></span>
+            <span class="presence-label">SHARED STREAM:</span>
+            <div class="presence-participants-chips" id="presence-chips-container">
+              <!-- Dynamically populated chips -->
+            </div>
+          </div>
+          <div class="presence-right">
+            <div id="collab-live-typing" class="live-typing-status hidden">
+              <span class="typing-pulse-dot"></span>
+              <span id="collab-live-typing-text">Bruce Banner is formulating an inquiry...</span>
+            </div>
+            <div id="collab-ai-concurrency-indicator" class="collab-ai-concurrency hidden">
+              <span class="neural-pulse-icon">⚡</span>
+              <span id="collab-ai-status-text">AI synthesizing response for Tony...</span>
+            </div>
+            <button class="btn-presence-invite" onclick="openCurrentCollabModal()">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+              <span>+ Invite</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Scroll Messages Area -->
+        <div id="chat-messages-container" class="chat-messages-container">
+          <!-- Empty State Hero (shown when no messages) -->
+          <div id="chat-empty-hero" class="chat-empty-hero">
+            <div class="hero-reactor-orbit">
+              <div class="orbit-ring orbit-ring-1"></div>
+              <div class="orbit-ring orbit-ring-2"></div>
+              <div class="orbit-core">
+                <div class="core-glyph">AI</div>
+              </div>
+            </div>
+            <h2 class="hero-title">STARK-AI <span class="text-cyan">CORE</span></h2>
+            <p class="hero-subtitle">Your Intelligence. Your Core. Autonomous multi-model reasoning and neural computing platform.</p>
+
+            <div class="suggested-prompts-grid">
+              <div class="prompt-card" onclick="usePrompt('Analyze security vulnerabilities in a modern OAuth2 + JWT authentication pipeline.')">
+                <div class="prompt-icon">🛡️</div>
+                <div class="prompt-body">
+                  <div class="prompt-label">Cybersecurity Audit</div>
+                  <div class="prompt-desc">Analyze security vulnerabilities in OAuth2 & JWT token workflows</div>
+                </div>
+              </div>
+
+              <div class="prompt-card" onclick="usePrompt('Design a scalable Spring Boot and PostgreSQL architecture for multi-tenant SaaS.')">
+                <div class="prompt-icon">⚙️</div>
+                <div class="prompt-body">
+                  <div class="prompt-label">System Architecture</div>
+                  <div class="prompt-desc">Design a scalable Spring Boot & PostgreSQL multi-tenant architecture</div>
+                </div>
+              </div>
+
+              <div class="prompt-card" onclick="usePrompt('Generate a high-performance Java algorithm to process large streaming JSON payloads with minimal heap usage.')">
+                <div class="prompt-icon">⚡</div>
+                <div class="prompt-body">
+                  <div class="prompt-label">Code Synthesis</div>
+                  <div class="prompt-desc">Synthesize zero-allocation streaming data processing in Java</div>
+                </div>
+              </div>
+
+              <div class="prompt-card" onclick="usePrompt('Help me formulate a business plan and unit economics model for an AI developer platform.')">
+                <div class="prompt-icon">📊</div>
+                <div class="prompt-body">
+                  <div class="prompt-label">Unit Economics</div>
+                  <div class="prompt-desc">Formulate recurring subscription pricing & GPU cost projection</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Chat Message Stream -->
+          <div id="messages-list" class="messages-list">
+            <!-- Messages rendered via JS -->
+          </div>
+
+          <!-- Loading Indicator Stream -->
+          <div id="typing-indicator" class="typing-indicator hidden">
+            <div class="ai-avatar-badge">
+              <span class="core-pulse"></span>
+            </div>
+            <div class="typing-bubble">
+              <div class="typing-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="typing-text">Synthesizing response via STARK Neural Engine...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Stop Button -->
+        <div id="stop-generation-wrap" class="stop-generation-wrap hidden">
+          <button id="btn-stop-generation" class="btn-stop" onclick="stopAiGeneration()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg>
+            <span>Halt Neural Output</span>
+          </button>
+        </div>
+
+        <!-- Attachment Tray -->
+        <div id="attachment-tray" class="attachment-tray hidden">
+          <div class="tray-files" id="tray-files-list"></div>
+        </div>
+
+        <!-- Chat Input Dock -->
+        <div class="chat-input-dock">
+          <!-- Viewer Mode Read-only warning banner -->
+          <div id="viewer-mode-banner" class="viewer-mode-banner hidden">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span><strong>VIEWER MODE (Read-Only):</strong> You have observer privileges for this transmission. Only the Host and Editors can submit queries to the Neural Core.</span>
+          </div>
+
+          <div class="input-container-glass">
+            
+            <!-- Attachment & Action Buttons -->
+            <div class="input-actions-left">
+              <button id="btn-attach-file" class="input-action-btn" onclick="triggerFileInput()" title="Upload Document / File">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+              </button>
+              <input type="file" id="file-input-hidden" style="display:none;" onchange="handleFileSelected(event)" multiple>
+
+              <button id="btn-image-mode" class="input-action-btn" onclick="triggerImagePicker()" title="Upload Image / Visual Query">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              </button>
+              <input type="file" id="image-input-hidden" accept="image/*" style="display:none;" onchange="handleImageSelected(event)">
+
+              <!-- Voice Dictation Button -->
+              <button id="btn-voice-input" class="input-action-btn voice-btn" onclick="toggleVoiceInput()" title="Voice Input (Speech-to-Text)">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+              </button>
+            </div>
+
+            <!-- Textarea Prompt -->
+            <textarea id="prompt-input" class="prompt-textarea" rows="1" placeholder="Initialize inquiry... (Ask anything, synthesize code, analyze data)" onkeydown="handleInputKeydown(event)" oninput="autoResizeInput(this)"></textarea>
+
+            <!-- Send Button -->
+            <div class="input-actions-right">
+              <button id="btn-send-message" class="btn-send" onclick="sendMessage()" title="Send Query">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="input-footnote">
+            <span>STARK-AI CORE v3.8 • Multi-Model Hybrid Neural Net • Plan: <strong id="footnote-plan-name">PRO</strong></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 2: DASHBOARD ================= -->
+      <section id="view-dashboard" class="view-panel">
+        <div class="dashboard-scroll">
+          <div class="dash-hero">
+            <div class="dash-hero-content">
+              <div class="dash-tag">NEURAL COMMAND CENTER</div>
+              <h2 class="dash-heading">Welcome back, <span id="dash-user-name">Tony Stark</span></h2>
+              <p class="dash-sub">All STARK-AI Core subsystems operational. Low latency neural routing active.</p>
+            </div>
+            <div class="dash-reactor-widget">
+              <div class="reactor-large">
+                <div class="reactor-glow"></div>
+                <div class="reactor-ring-outer"></div>
+                <div class="reactor-ring-inner"></div>
+                <div class="reactor-core-light">CORE</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Key Metrics Grid -->
+          <div class="dash-metrics-grid">
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-title">Active Plan</span>
+                <span class="metric-badge tier-pro" id="dash-card-plan">PRO</span>
+              </div>
+              <div class="metric-val">$20<span class="metric-unit">/month</span></div>
+              <div class="metric-foot">Renews in 18 days • Full high-reasoning models</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-title">Messages Used</span>
+                <span class="metric-badge" id="dash-card-limit">18 / 150</span>
+              </div>
+              <div class="metric-val" id="dash-card-pct">12%</div>
+              <div class="dash-progress-track">
+                <div class="dash-progress-bar" id="dash-metric-bar" style="width: 12%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-title">Files Analyzed</span>
+                <span class="metric-badge">Vault</span>
+              </div>
+              <div class="metric-val" id="dash-card-files">4 <span class="metric-unit">docs</span></div>
+              <div class="metric-foot">12.8 MB of 100 MB quota used</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-title">Neural Engine Status</span>
+                <span class="metric-badge status-good">OPTIMAL</span>
+              </div>
+              <div class="metric-val">28ms</div>
+              <div class="metric-foot">Zero dropped packets • Edge CDN active</div>
+            </div>
+          </div>
+
+          <!-- Dashboard Quick Launchers -->
+          <div class="dash-section">
+            <div class="dash-section-header">
+              <h3>Core Capabilities</h3>
+              <button class="btn-text-action" onclick="switchView('view-chat')">Launch Chat &rarr;</button>
+            </div>
+            <div class="features-grid">
+              <div class="feature-tile" onclick="launchFeature('coding')">
+                <div class="tile-icon">⚡</div>
+                <h4>High-Speed Coding</h4>
+                <p>Synthesize production code, debug complex stacks, build unit tests and documentation.</p>
+              </div>
+              <div class="feature-tile" onclick="launchFeature('analysis')">
+                <div class="tile-icon">📑</div>
+                <h4>Document Intelligence</h4>
+                <p>Upload PDF, JSON, CSV and code repositories to extract actionable insights instantly.</p>
+              </div>
+              <div class="feature-tile" onclick="launchFeature('vision')">
+                <div class="tile-icon">👁️</div>
+                <h4>Vision & Generation</h4>
+                <p>Examine UI layouts, inspect diagrams, and generate futuristic creative imagery.</p>
+              </div>
+              <div class="feature-tile" onclick="launchFeature('voice')">
+                <div class="tile-icon">🎙️</div>
+                <h4>Real-Time Voice</h4>
+                <p>Hands-free speech dictation and high-fidelity text-to-speech audio playback.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Transmissions in Dashboard -->
+          <div class="dash-section">
+            <div class="dash-section-header">
+              <h3>Recent Neural Transmissions</h3>
+              <button class="btn-text-action" onclick="createNewConversation()">+ New Chat</button>
+            </div>
+            <div id="dash-recent-chats" class="dash-recent-list">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= VIEW 3: ADMIN PANEL ================= -->
+      <section id="view-admin" class="view-panel">
+        <div class="admin-container">
+          <div class="admin-header">
+            <div>
+              <div class="admin-badge">RESTRICTED ACCESS • LEVEL 5 CLEARANCE</div>
+              <h2>STARK-AI Global System Command</h2>
+              <p>Platform monitoring, user management, and subscription telemetry.</p>
+            </div>
+            <div class="admin-actions">
+              <button class="btn-secondary-cyan" onclick="refreshAdminData()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                <span>Synchronize</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Admin Stats Cards -->
+          <div class="admin-stats-grid">
+            <div class="admin-stat-card">
+              <span class="stat-label">Total Registered Users</span>
+              <span class="stat-number" id="admin-total-users">1,428</span>
+              <span class="stat-trend positive">+14.2% this month</span>
+            </div>
+            <div class="admin-stat-card">
+              <span class="stat-label">Active Neural Sessions</span>
+              <span class="stat-number" id="admin-active-users">382</span>
+              <span class="stat-trend positive">Real-time concurrency</span>
+            </div>
+            <div class="admin-stat-card">
+              <span class="stat-label">Monthly Platform Revenue</span>
+              <span class="stat-number" id="admin-revenue">$26,450</span>
+              <span class="stat-trend positive">ARR $317,400</span>
+            </div>
+            <div class="admin-stat-card">
+              <span class="stat-label">Subscribers by Tier</span>
+              <div class="tier-distribution">
+                <span class="tier-pill tier-standard">Std: 610</span>
+                <span class="tier-pill tier-pro">Pro: 580</span>
+                <span class="tier-pill tier-vip">VIP: 238</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Management Table -->
+          <div class="admin-card-table">
+            <div class="table-header-row">
+              <h3>User Accounts & Tier Allocations</h3>
+              <input type="text" id="admin-user-search" placeholder="Filter by email or name..." oninput="filterAdminUsers(this.value)" class="table-search-input">
+            </div>
+            <div class="table-responsive">
+              <table class="stark-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Plan</th>
+                    <th>Messages Used</th>
+                    <th>Status</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-table-body">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= MODALS & OVERLAYS ================= -->
+
+    <!-- 1. PRICING & SUBSCRIPTIONS MODAL -->
+    <div id="modal-subscription" class="modal-backdrop hidden">
+      <div class="modal-dialog modal-wide">
+        <div class="modal-header">
+          <div>
+            <span class="modal-kicker">SUBSCRIPTION ARCHITECTURE</span>
+            <h3 class="modal-title">Upgrade Your STARK Intelligence Tier</h3>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-subscription')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="pricing-subtitle">Select the neural horsepower tailored to your mission. Change or cancel anytime.</p>
+          
+          <div class="pricing-cards-grid">
+            <!-- Plan 1: STANDARD -->
+            <div class="pricing-card" id="card-plan-standard">
+              <div class="pricing-tier-tag">FOUNDATIONAL</div>
+              <h4 class="pricing-name">STANDARD</h4>
+              <div class="pricing-price">$10 <span class="price-cycle">/month</span></div>
+              <p class="pricing-desc">Essential AI intelligence for everyday tasks, research, and basic workflows.</p>
+              <ul class="pricing-features">
+                <li><span class="check-mark">✓</span> Basic AI Model access</li>
+                <li><span class="check-mark">✓</span> Normal response speed</li>
+                <li><span class="check-mark">✓</span> Standard usage limit (50 msgs/mo)</li>
+                <li><span class="check-mark">✓</span> Basic file analysis (up to 10MB)</li>
+                <li><span class="check-mark">✓</span> Standard image understanding</li>
+              </ul>
+              <button class="btn-tier-action" id="btn-select-standard" onclick="selectPlan('STANDARD', 10)">Select Standard</button>
+            </div>
+
+            <!-- Plan 2: PRO (Popular) -->
+            <div class="pricing-card featured" id="card-plan-pro">
+              <div class="badge-featured">MOST POPULAR</div>
+              <div class="pricing-tier-tag text-cyan">HIGH PERFORMANCE</div>
+              <h4 class="pricing-name">PRO</h4>
+              <div class="pricing-price">$20 <span class="price-cycle">/month</span></div>
+              <p class="pricing-desc">Advanced reasoning and coding intelligence for power users, developers, and engineers.</p>
+              <ul class="pricing-features">
+                <li><span class="check-mark">✓</span> <strong>More powerful AI models</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Higher usage limits (250 msgs/mo)</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Advanced reasoning & STEM</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Advanced coding engine</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Larger file analysis (up to 50MB)</strong></li>
+                <li><span class="check-mark">✓</span> Faster processing & low latency</li>
+              </ul>
+              <button class="btn-tier-action btn-cyan-glow" id="btn-select-pro" onclick="selectPlan('PRO', 20)">Current Plan</button>
+            </div>
+
+            <!-- Plan 3: VIP -->
+            <div class="pricing-card" id="card-plan-vip">
+              <div class="pricing-tier-tag text-purple">ENTERPRISE POWER</div>
+              <h4 class="pricing-name">VIP</h4>
+              <div class="pricing-price">$25 <span class="price-cycle">/month</span></div>
+              <p class="pricing-desc">Uncapped flagship intelligence with dedicated priority bandwidth and early preview access.</p>
+              <ul class="pricing-features">
+                <li><span class="check-mark">✓</span> <strong>Highest available AI models</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Highest usage limits (Unlimited)</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Priority processing queue</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Premium AI & Lyria/Image features</strong></li>
+                <li><span class="check-mark">✓</span> <strong>Early access to new neural models</strong></li>
+                <li><span class="check-mark">✓</span> Dedicated 24/7 priority support</li>
+              </ul>
+              <button class="btn-tier-action btn-purple-glow" id="btn-select-vip" onclick="selectPlan('VIP', 25)">Upgrade to VIP</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CHECKOUT / PAYMENT MODAL -->
+    <div id="modal-checkout" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div>
+            <span class="modal-kicker">SECURE PAYMENT PROTOCOL</span>
+            <h3 class="modal-title">Complete Subscription</h3>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-checkout')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="checkout-summary">
+            <div class="checkout-row">
+              <span class="checkout-label">Selected Tier:</span>
+              <strong id="checkout-tier-name">PRO</strong>
+            </div>
+            <div class="checkout-row">
+              <span class="checkout-label">Billing Rate:</span>
+              <strong id="checkout-amount">$20.00 / month</strong>
+            </div>
+            <div class="checkout-row">
+              <span class="checkout-label">Security:</span>
+              <span class="text-green">256-bit Encrypted Tokenization</span>
+            </div>
+          </div>
+
+          <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)">
+            <div class="form-group">
+              <label>Cardholder Name</label>
+              <input type="text" class="stark-input" id="cardholder-name" placeholder="Tony Stark" required>
+            </div>
+            <div class="form-group">
+              <label>Virtual Card Number (Simulated Gateway)</label>
+              <input type="text" class="stark-input" id="card-number" placeholder="4242 •••• •••• 4242" required maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="form-group half">
+                <label>Expiration</label>
+                <input type="text" class="stark-input" placeholder="12/28" required maxlength="5">
+              </div>
+              <div class="form-group half">
+                <label>CVC</label>
+                <input type="password" class="stark-input" placeholder="•••" required maxlength="4">
+              </div>
+            </div>
+            <div class="security-note">
+              🔒 No card data is stored directly in the application database. Tokenized via compliant PCI gateway.
+            </div>
+            <button type="submit" class="btn-primary-cyan btn-full">
+              <span id="checkout-btn-text">Confirm & Authorize Upgrade</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. FILE VAULT MODAL -->
+    <div id="modal-files" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div>
+            <span class="modal-kicker">DATA VAULT</span>
+            <h3 class="modal-title">Attached Knowledge & Documents</h3>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-files')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="dropzone" onclick="triggerFileInput()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            <p><strong>Click to upload</strong> or drag and drop files here</p>
+            <span>Supports PDF, TXT, CSV, JSON, MD, Java, Python (Up to 50MB on Pro)</span>
+          </div>
+
+          <div class="uploaded-files-section">
+            <h4>Uploaded Vault Items (<span id="vault-count">0</span>)</h4>
+            <div id="vault-files-list" class="vault-files-list">
+              <!-- Files rendered here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. AUTHENTICATION MODAL (Login / Register / Reset) -->
+    <div id="modal-auth" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="brand-modal">
+            <div class="arc-core-mini"><div class="arc-ring"></div></div>
+            <h3 class="modal-title" id="auth-modal-title">STARK Core Authentication</h3>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-auth')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- Auth Tabs -->
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</button>
+            <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Create Account</button>
+            <button class="auth-tab" id="tab-reset" onclick="switchAuthTab('reset')">Reset Key</button>
+          </div>
+
+          <!-- Form Login -->
+          <form id="form-login" onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label>Email Transmission</label>
+              <input type="email" id="login-email" class="stark-input" placeholder="tony@stark.com" required value="tony@stark.com">
+            </div>
+            <div class="form-group">
+              <label>Security Passcode</label>
+              <input type="password" id="login-password" class="stark-input" placeholder="••••••••" required value="StarkCore2026!">
+            </div>
+            <button type="submit" class="btn-primary-cyan btn-full">Authenticate & Connect</button>
+          </form>
+
+          <!-- Form Register -->
+          <form id="form-register" class="hidden" onsubmit="handleRegister(event)">
+            <div class="form-group">
+              <label>Full Identity</label>
+              <input type="text" id="reg-name" class="stark-input" placeholder="Pepper Potts" required>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="reg-email" class="stark-input" placeholder="pepper@stark.com" required>
+            </div>
+            <div class="form-group">
+              <label>Password (Min 8 chars, hashed securely)</label>
+              <input type="password" id="reg-password" class="stark-input" placeholder="••••••••" required minlength="8">
+            </div>
+            <button type="submit" class="btn-primary-cyan btn-full">Initialize Account</button>
+          </form>
+
+          <!-- Form Reset -->
+          <form id="form-reset" class="hidden" onsubmit="handleResetPassword(event)">
+            <div class="form-group">
+              <label>Recovery Email</label>
+              <input type="email" id="reset-email" class="stark-input" placeholder="tony@stark.com" required>
+            </div>
+            <button type="submit" class="btn-primary-cyan btn-full">Send Recovery Cryptokey</button>
+          </form>
+
+          <!-- Quick Test Accounts -->
+          <div class="demo-accounts-tray">
+            <span>Instant Role Switcher:</span>
+            <div class="demo-btns">
+              <button type="button" class="btn-demo-pill" onclick="quickLogin('standard')">Standard</button>
+              <button type="button" class="btn-demo-pill" onclick="quickLogin('pro')">Pro</button>
+              <button type="button" class="btn-demo-pill" onclick="quickLogin('vip')">VIP</button>
+              <button type="button" class="btn-demo-pill" onclick="quickLogin('admin')">Admin</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. SETTINGS MODAL -->
+    <div id="modal-settings" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div>
+            <span class="modal-kicker">PREFERENCES & TELEMETRY</span>
+            <h3 class="modal-title">System Settings</h3>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-settings')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-section">
+            <h4>Appearance & Visual Aesthetics</h4>
+            <div class="setting-row">
+              <div>
+                <strong>Theme Profile</strong>
+                <p>Select visual color palette</p>
+              </div>
+              <select id="setting-theme" class="stark-select" onchange="changeTheme(this.value)">
+                <option value="theme-stark-dark">Obsidian & Cyan Arc (Default)</option>
+                <option value="theme-cyber-blue">Cobalt Quantum Blue</option>
+                <option value="theme-crimson-core">Stark Mark 85 Crimson</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4>Voice & Synthesizer</h4>
+            <div class="setting-row">
+              <div>
+                <strong>Auto Text-To-Speech</strong>
+                <p>Read incoming AI answers automatically</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="setting-tts" onchange="saveSetting('tts', this.checked)">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4>Data & Privacy</h4>
+            <div class="setting-row">
+              <div>
+                <strong>Store Transmissions Locally</strong>
+                <p>Persist chat logs across sessions</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="setting-history" checked onchange="saveSetting('history', this.checked)">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <button class="btn-danger-outline" onclick="wipeLocalData()">Wipe Local Cache & Messages</button>
+          </div>
+
+          <div class="settings-section">
+            <h4>Spring Boot Backend Gateway</h4>
+            <div class="form-group">
+              <label>API Endpoint (Default: Simulated Local Core / Spring Boot http://localhost:8080)</label>
+              <input type="text" id="setting-api-url" class="stark-input" value="http://localhost:8080/api" placeholder="http://localhost:8080/api">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. USER PROFILE MODAL -->
+    <div id="modal-profile" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 class="modal-title">Operative Identity</h3>
+          <button class="modal-close-btn" onclick="closeModal('modal-profile')">&times;</button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="profile-avatar-large" id="profile-avatar-large">TS</div>
+          <h4 id="profile-full-name">Tony Stark</h4>
+          <span class="profile-badge-role" id="profile-role-tag">CHIEF ARCHITECT • PRO</span>
+          <p class="profile-email-text" id="profile-email">tony@stark.com</p>
+
+          <div class="profile-stats-card">
+            <div class="p-stat">
+              <span class="p-stat-val" id="p-stat-transmissions">42</span>
+              <span class="p-stat-label">Transmissions</span>
+            </div>
+            <div class="p-stat">
+              <span class="p-stat-val" id="p-stat-files">4</span>
+              <span class="p-stat-label">Files Uploaded</span>
+            </div>
+            <div class="p-stat">
+              <span class="p-stat-val" id="p-stat-plan">PRO</span>
+              <span class="p-stat-label">Active Plan</span>
+            </div>
+          </div>
+
+          <div class="modal-footer-actions">
+            <button class="btn-secondary-cyan" onclick="closeModal('modal-profile'); showModal('modal-subscription')">Manage Subscription</button>
+            <button class="btn-danger-outline" onclick="logoutUser()">Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. REAL-TIME COLLABORATION & ROLES MODAL -->
+    <div id="modal-collaboration" class="modal-backdrop hidden">
+      <div class="modal-dialog modal-dialog-wide">
+        <div class="modal-header">
+          <div class="modal-header-with-badge">
+            <div class="reactor-icon-small"></div>
+            <div>
+              <h3 class="modal-title">Real-Time Team Collaboration</h3>
+              <p class="modal-subtitle">Share session, synchronize neural responses & manage operative roles</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-collaboration')">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Master Collaboration Switch -->
+          <div class="collab-master-switch-card">
+            <div class="switch-meta">
+              <div class="status-indicator-collab" id="collab-active-dot"></div>
+              <div>
+                <strong id="collab-status-heading">Collaborative Session Mode</strong>
+                <p id="collab-status-desc">Allow multiple team operatives to view, query, and synthesize responses in real-time</p>
+              </div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="collab-toggle-checkbox" onchange="toggleCurrentConversationCollab()">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Invite Code & Shareable Access Box -->
+          <div class="collab-invite-box">
+            <div class="invite-header-row">
+              <span class="invite-label">STARK SESSION ACCESS CODE</span>
+              <span class="invite-secure-badge">AES-256 ENCRYPTED</span>
+            </div>
+            <div class="invite-code-row">
+              <div class="code-display" id="collab-invite-code-display">STRK-8921</div>
+              <div class="code-actions">
+                <button class="btn-cyber-action" onclick="copyCollabCode()">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <span>Copy Code</span>
+                </button>
+                <button class="btn-cyber-action" onclick="copyCollabShareLink()">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+                  <span>Copy Link</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direct Invite Operative Input -->
+          <div class="collab-direct-invite-card">
+            <h4>Invite Operative by Call-sign or Email</h4>
+            <div class="invite-input-group">
+              <input type="text" id="collab-invite-input" class="stark-input" placeholder="e.g. banner@stark.team or Bruce Banner">
+              <select id="collab-invite-role" class="stark-select">
+                <option value="EDITOR">EDITOR (Send & Query AI)</option>
+                <option value="VIEWER">VIEWER (Read-Only Stream)</option>
+              </select>
+              <button class="btn-cyan-glow" onclick="inviteCollaboratorAction()">Dispatch Invite</button>
+            </div>
+            <div class="quick-suggest-chips">
+              <span>Quick add team:</span>
+              <button class="btn-quick-chip" onclick="quickSelectInvite('Bruce Banner', 'EDITOR')">+ Bruce Banner (Editor)</button>
+              <button class="btn-quick-chip" onclick="quickSelectInvite('Pepper Potts', 'VIEWER')">+ Pepper Potts (Viewer)</button>
+              <button class="btn-quick-chip" onclick="quickSelectInvite('Peter Parker', 'EDITOR')">+ Peter Parker (Editor)</button>
+            </div>
+          </div>
+
+          <!-- Active Participants & Role Governance Roster -->
+          <div class="collab-roster-section">
+            <div class="roster-header">
+              <h4>Connected Operatives & Roles (<span id="collab-roster-count">3</span>)</h4>
+              <span class="roster-subtext">Real-time bi-directional message synchronization</span>
+            </div>
+            <div class="participants-list" id="collab-participants-list">
+              <!-- Dynamically populated participant cards -->
+            </div>
+          </div>
+
+          <!-- Host Session Governance Permissions -->
+          <div class="collab-governance-section" id="collab-governance-panel">
+            <h4>Host Access Controls & Governance</h4>
+            <div class="gov-options-grid">
+              <label class="gov-checkbox-row">
+                <input type="checkbox" id="gov-allow-editor-ai" checked onchange="updateGovSettings()">
+                <div>
+                  <strong>Allow Editors to Trigger Neural AI Generation</strong>
+                  <p>When disabled, only the Host can execute AI synthesis</p>
+                </div>
+              </label>
+
+              <label class="gov-checkbox-row">
+                <input type="checkbox" id="gov-allow-member-invites" checked onchange="updateGovSettings()">
+                <div>
+                  <strong>Allow Members to Invite Other Operatives</strong>
+                  <p>Permit team members to dispatch session invite codes</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Live Multi-User Concurrency Simulator Tray -->
+          <div class="collab-simulator-tray">
+            <div class="sim-header">
+              <span class="sim-badge">TEST LAB</span>
+              <strong>Multi-User Simulation & Concurrency Test Engine</strong>
+            </div>
+            <p class="sim-desc">Switch active operative identity on the fly to test read-only viewer mode, editor permissions, and concurrent message delivery:</p>
+            <div class="persona-switch-buttons">
+              <button class="btn-persona-btn active" id="btn-persona-tony" onclick="switchTestPersona('tony')">
+                <span class="persona-avatar-chip" style="background:#00e5ff;color:#000;">TS</span>
+                <span>Tony Stark <em>(HOST)</em></span>
+              </button>
+              <button class="btn-persona-btn" id="btn-persona-bruce" onclick="switchTestPersona('bruce')">
+                <span class="persona-avatar-chip" style="background:#10b981;color:#000;">BB</span>
+                <span>Bruce Banner <em>(EDITOR)</em></span>
+              </button>
+              <button class="btn-persona-btn" id="btn-persona-pepper" onclick="switchTestPersona('pepper')">
+                <span class="persona-avatar-chip" style="background:#f59e0b;color:#000;">PP</span>
+                <span>Pepper Potts <em>(VIEWER)</em></span>
+              </button>
+              <button class="btn-persona-btn" id="btn-persona-peter" onclick="switchTestPersona('peter')">
+                <span class="persona-avatar-chip" style="background:#ef4444;color:#000;">SP</span>
+                <span>Peter Parker <em>(EDITOR)</em></span>
+              </button>
+            </div>
+            <div class="sim-actions-row">
+              <button class="btn-simulate-partner-msg" onclick="simulatePartnerMessage()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <span>Simulate Concurrent Message from Team Member</span>
+              </button>
+              <button class="btn-simulate-typing" onclick="simulatePartnerTyping()">
+                <span>Simulate Live Typing</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. JOIN SHARED SESSION MODAL -->
+    <div id="modal-join-session" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-header-with-badge">
+            <div class="reactor-icon-small"></div>
+            <div>
+              <h3 class="modal-title">Join Shared Session</h3>
+              <p class="modal-subtitle">Connect to an active STARK multi-user collaboration stream</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" onclick="closeModal('modal-join-session')">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>STARK Session Access Code (6 digits)</label>
+            <div class="input-with-icon">
+              <input type="text" id="join-invite-code" class="stark-input uppercase-text" placeholder="e.g. STRK-8921" maxlength="12" style="font-family:monospace;letter-spacing:2px;font-size:16px;">
+            </div>
+            <small class="field-hint">Obtain this code from your session host or team architect</small>
+          </div>
+
+          <div class="form-group">
+            <label>Your Operative Name / Call-Sign (Optional)</label>
+            <input type="text" id="join-operative-name" class="stark-input" placeholder="e.g. Agent Romanoff">
+          </div>
+
+          <div class="modal-footer-actions">
+            <button class="btn-cancel" onclick="closeModal('modal-join-session')">Cancel</button>
+            <button class="btn-cyan-glow" onclick="executeJoinSession()">Connect to Stream</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast-container" class="toast-container"></div>
+
+  </div>
+
+  <!-- Client-side script modules -->
+  <script src="js/stark-api.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

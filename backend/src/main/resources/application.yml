@@ -1,0 +1,65 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: stark-ai-core-backend
+  
+  # Relational Database Configuration
+  # Supports PostgreSQL, MySQL, or rapid zero-dependency H2
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:starkcore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  
+  jpa:
+    database-platform: ${SPRING_JPA_DIALECT:org.hibernate.dialect.H2Dialect}
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Multipart / File Upload configurations
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+
+# STARK-AI Core Specific Subsystem Settings
+stark:
+  jwt:
+    secret: ${JWT_SECRET:STARK_CORE_SUPER_SECRET_QUANTUM_KEY_2026_ABCD_9918237461928374}
+    expiration-ms: 86400000 # 24 hours
+  
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    api-url: https://generativelanguage.googleapis.com/v1beta
+    default-model: gemini-3.5-flash
+    reasoning-model: gemini-3.1-pro-preview
+    vision-model: gemini-2.5-flash-image
+
+  rate-limit:
+    requests-per-minute: 60
+    burst-capacity: 100
+
+  plans:
+    standard:
+      name: STANDARD
+      price: 10
+      max-messages: 50
+      max-file-size-mb: 10
+    pro:
+      name: PRO
+      price: 20
+      max-messages: 250
+      max-file-size-mb: 50
+    vip:
+      name: VIP
+      price: 25
+      max-messages: 999999
+      max-file-size-mb: 200

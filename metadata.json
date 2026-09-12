@@ -1,0 +1,6 @@
+{
+  "name": "STARK-AI CORE",
+  "description": "Futuristic AI Chatbot with multi-model intelligence, file analysis, image generation, voice capabilities, and multi-tier subscription system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
